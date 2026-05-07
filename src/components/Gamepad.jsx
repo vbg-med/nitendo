@@ -1,50 +1,58 @@
-import { useGLTF, useTexture } from "@react-three/drei";
-import { useEffect, useRef, useState } from "react"; // ✅ add useState
+import { useGLTF } from "@react-three/drei";
+import { useEffect, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import { SCREEN_NAME, JOYCON_NAMES } from "../utils/constants"; // ✅ fix #1
 
 function isBlockedMesh(object) {
   let obj = object;
   while (obj) {
     const name = obj.name || "";
     if (
-      name === "Screen" ||
+      name === SCREEN_NAME ||
       name.includes("Body") ||
       name.includes("Material") ||
       name.includes("Joycon")
-    ) return true;
+    )
+      return true;
     obj = obj.parent;
   }
   return false;
 }
 
-export default function Gamepad({ setIsInteracting }) { // ✅ no imageIndex/onButtonPress props
+export default function Gamepad({
+  setIsInteracting,
+  onButtonPress,
+  joystickScrollRef,
+  scrollElRef,
+}) {
   const { scene } = useGLTF("/withScreen.glb");
-  
-  // ✅ State lives here — re-renders only Gamepad, not Experience/Bounds
-  const [imageIndex, setImageIndex] = useState(0);
 
-  const textures = useTexture([
-    "/img1.jpg", "/img2.jpg", "/img3.jpg",
-    "/img4.jpg", "/img5.jpg", "/img6.jpg",
-    "/img7.jpg", "/img8.jpg", "/img9.jpg",
-  ]);
-
-  const screenRef = useRef(null);
   const dragInfo = useRef({ object: null, startPoint: null, startPos: null });
   const traversedRef = useRef(false);
-  
-  // ✅ Ref so userData.onClick always sees latest value without re-traversal
-  const imageIndexRef = useRef(0);
 
+  // ✅ fix #3 — stable ref for callback, no stale closure
+  const onButtonPressRef = useRef(onButtonPress);
   useEffect(() => {
-    textures.forEach((t) => {
-      t.flipY = false;
-      t.anisotropy = 16;
-      t.colorSpace = "srgb";
-      t.center.set(0.5, 0.5);
-      t.rotation = Math.PI / 2;
-      t.needsUpdate = true;
-    });
-  }, [textures]);
+    onButtonPressRef.current = onButtonPress;
+  }, [onButtonPress]);
+
+  // ✅ fix #2 — useFrame lives here in R3F context, writes to DOM ref
+  useFrame(() => {
+    if (scrollElRef?.current) {
+      const el = scrollElRef.current;
+
+      if (el) {
+        const maxScroll = el.scrollHeight - el.clientHeight;
+
+        joystickScrollRef.current = Math.max(
+          0,
+          Math.min(maxScroll, joystickScrollRef.current),
+        );
+
+        el.scrollTop = joystickScrollRef.current;
+      }
+    }
+  });
 
   useEffect(() => {
     if (traversedRef.current) return;
@@ -52,14 +60,6 @@ export default function Gamepad({ setIsInteracting }) { // ✅ no imageIndex/onB
 
     scene.traverse((obj) => {
       if (!obj.isMesh) return;
-
-      if (obj.name === "Screen") {
-        obj.material = obj.material.clone();
-        obj.material.color.set("#ffffff");
-        obj.material.roughness = 0.1;
-        obj.material.metalness = 0;
-        screenRef.current = obj;
-      }
 
       if (!obj.userData.initialPosition) {
         obj.userData.initialPosition = obj.position.clone();
@@ -73,27 +73,17 @@ export default function Gamepad({ setIsInteracting }) { // ✅ no imageIndex/onB
           }
         }, 120);
 
-        // ✅ Update both ref and state
-        const next = (imageIndexRef.current + 1) % 9;
-        imageIndexRef.current = next;
-        setImageIndex(next);
+        const name = obj.name;
+        console.log("Button clicked:", name);
+
+        if (name === "ButtonA") onButtonPressRef.current?.("projects");
+        else if (name === "ButtonB") onButtonPressRef.current?.("contact");
+        else if (name === "ButtonX") onButtonPressRef.current?.("skills");
+        else if (name === "ButtonY") onButtonPressRef.current?.("about");
+        else if (name.includes("Plus")) onButtonPressRef.current?.("menu");
       };
     });
-  }, [scene]);
-
-  useEffect(() => {
-    if (!screenRef.current) return;
-    const mat = screenRef.current.material;
-    const tex = textures[imageIndex];
-    if (tex) {
-      mat.map = tex;
-      mat.emissiveMap = tex;
-      mat.emissiveIntensity = 0.8;
-      mat.emissive.set("#ffffff");
-      mat.toneMapped = false;
-      mat.needsUpdate = true;
-    }
-  }, [imageIndex, textures]);
+  }, [scene]); // ✅ fix #3 — no onButtonPress in deps
 
   return (
     <group rotation={[Math.PI / 2, 0, 0]} scale={6}>
@@ -103,7 +93,7 @@ export default function Gamepad({ setIsInteracting }) { // ✅ no imageIndex/onB
           e.stopPropagation();
           setIsInteracting(true);
 
-          if (e.object.name.includes("Joycon")) {
+          if (JOYCON_NAMES.includes(e.object.name)) {
             dragInfo.current = {
               object: e.object,
               startPoint: e.point.clone(),
@@ -113,22 +103,45 @@ export default function Gamepad({ setIsInteracting }) { // ✅ no imageIndex/onB
         }}
         onPointerUp={(e) => {
           e.stopPropagation();
-
           if (dragInfo.current.object) {
             dragInfo.current.object.position.copy(
-              dragInfo.current.object.userData.initialPosition
+              dragInfo.current.object.userData.initialPosition,
             );
-            dragInfo.current = { object: null, startPoint: null, startPos: null };
+            dragInfo.current = {
+              object: null,
+              startPoint: null,
+              startPos: null,
+            };
+          }
+        }}
+        onPointerMove={(e) => {
+          e.stopPropagation();
+
+          const dragged = dragInfo.current.object;
+
+          if (!dragged) return;
+
+          // ✅ both joycons supported
+          if (JOYCON_NAMES.includes(dragged.name)) {
+            // movement delta
+            const deltaY = e.point.y - dragInfo.current.startPoint.y;
+
+            // ✅ invert scroll direction
+            const scrollAmount = -deltaY * 300;
+
+            // current scroll
+            const currentScroll = scrollElRef.current?.scrollTop || 0;
+
+            // apply incremental scroll
+            joystickScrollRef.current = currentScroll + scrollAmount;
           }
         }}
         onClick={(e) => {
           e.stopPropagation();
-
           if (isBlockedMesh(e.object)) {
             setIsInteracting(false);
             return;
           }
-
           e.object.userData.onClick?.();
           setTimeout(() => setIsInteracting(false), 150);
         }}

@@ -1,9 +1,10 @@
+@import "tailwindcss";
 body {
   margin: 0;
   overflow: hidden;
   padding: 0;
   box-sizing: border-box;
-  background-color: #111;
+  /* background-color: #111; */
 }
 
 .app-container {

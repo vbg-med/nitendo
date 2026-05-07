@@ -1,12 +1,20 @@
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Environment, ContactShadows } from "@react-three/drei"; // ✅ remove Bounds
-import { useEffect, useRef } from "react";
+import { OrbitControls, Environment, ContactShadows } from "@react-three/drei";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import Gamepad from "./Gamepad";
+import PortfolioApp from "./PortfolioApp";
 
 export default function Experience() {
   const controlsRef = useRef();
   const cameraRef = useRef();
+  const joystickScrollRef = useRef(0);
+  const scrollElRef = useRef(null); // ✅ DOM ref for sidebar scroll container
+
+  const [portfolioState, setPortfolioState] = useState({
+    activePage: "about",
+    showMenu: false,
+  });
 
   useEffect(() => {
     if (!cameraRef.current || !controlsRef.current) return;
@@ -29,6 +37,14 @@ export default function Experience() {
       "<",
     );
   }, []);
+
+  const handleButtonPress = (button) => {
+    if (button === "menu") {
+      setPortfolioState((prev) => ({ ...prev, showMenu: !prev.showMenu }));
+    } else {
+      setPortfolioState({ activePage: button, showMenu: false });
+    }
+  };
 
   const setIsInteracting = (val) => {
     if (controlsRef.current) {
@@ -57,8 +73,6 @@ export default function Experience() {
     >
       <color attach="background" args={["#050505"]} />
       <ambientLight intensity={0.3} />
-
-      {/* Key light - front slightly left */}
       <spotLight
         position={[-5, 5, 10]}
         angle={0.4}
@@ -66,8 +80,6 @@ export default function Experience() {
         intensity={0.8}
         castShadow
       />
-
-      {/* Fill light - right side */}
       <spotLight
         position={[5, 3, 8]}
         angle={0.5}
@@ -75,23 +87,34 @@ export default function Experience() {
         intensity={0.4}
         castShadow={false}
       />
-
-      {/* Subtle rim light */}
       <pointLight position={[0, -5, 3]} intensity={0.2} color="#4488ff" />
       <Environment preset="city" />
 
-      {/* ✅ Center and scale the model manually */}
       <group position={[1.4, 3.2, 0]} scale={6.2}>
-        <Gamepad setIsInteracting={setIsInteracting} />
+        <Gamepad
+          setIsInteracting={setIsInteracting}
+          onButtonPress={handleButtonPress}
+          joystickScrollRef={joystickScrollRef}
+          scrollElRef={scrollElRef} // ✅ passed to Gamepad for useFrame
+        />
+        <PortfolioApp
+          joystickScrollRef={joystickScrollRef}
+          activePage={portfolioState.activePage}
+          showMenu={portfolioState.showMenu}
+          onPageChange={(page) =>
+            setPortfolioState({ activePage: page, showMenu: false })
+          }
+          scrollElRef={scrollElRef} // ✅ passed to PortfolioApp → Sidebar
+        />
       </group>
 
-    <ContactShadows
-  position={[0, -3, 0]}
-  opacity={0.15}
-  scale={20}
-  blur={3}
-  far={4.5}
-/>
+      <ContactShadows
+        position={[0, -3, 0]}
+        opacity={0.15}
+        scale={20}
+        blur={3}
+        far={4.5}
+      />
       <OrbitControls ref={controlsRef} target={[0, 0, 0]} />
     </Canvas>
   );

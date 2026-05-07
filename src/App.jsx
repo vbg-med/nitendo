@@ -1,4 +1,6 @@
 import Experience from "./components/Experience";
+import "./styles/portfolio.css";
+
 
 function App() {
   return (
