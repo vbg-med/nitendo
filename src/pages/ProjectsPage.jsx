@@ -1,6 +1,7 @@
 // src/pages/ProjectsPage.jsx
 
 import { PROFILE } from "../utils/profile";
+import SafeImage from "../components/SafeImage";
 
 export default function ProjectsPage() {
   const { projects } = PROFILE;
@@ -24,7 +25,7 @@ export default function ProjectsPage() {
             className="overflow-hidden rounded-3xl bg-[#0b1120] border border-cyan-500/20 group hover:border-cyan-400 transition-all duration-300"
           >
             <div className="h-56 overflow-hidden">
-              <img
+              <SafeImage
                 src={project.image}
                 alt={project.projectName}
                 className="w-full h-full object-cover group-hover:scale-110 transition-all duration-500"

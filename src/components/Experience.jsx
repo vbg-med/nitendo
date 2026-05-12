@@ -1,9 +1,10 @@
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Environment, ContactShadows } from "@react-three/drei";
-import { useEffect, useRef, useState } from "react";
+import { OrbitControls, Environment, ContactShadows, useProgress } from "@react-three/drei";
+import { Suspense, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import Gamepad from "./Gamepad";
 import PortfolioApp from "./PortfolioApp";
+import Loader from "./Loader";
 
 export default function Experience() {
   const controlsRef = useRef();
@@ -15,6 +16,9 @@ export default function Experience() {
     activePage: "about",
     showMenu: false,
   });
+
+  const { progress } = useProgress();
+  const isLoading = progress < 100;
 
   useEffect(() => {
     if (!cameraRef.current || !controlsRef.current) return;
@@ -90,23 +94,26 @@ export default function Experience() {
       <pointLight position={[0, -5, 3]} intensity={0.2} color="#4488ff" />
       <Environment preset="city" />
 
-      <group position={[1.4, 3.2, 0]} scale={6.2}>
-        <Gamepad
-          setIsInteracting={setIsInteracting}
-          onButtonPress={handleButtonPress}
-          joystickScrollRef={joystickScrollRef}
-          scrollElRef={scrollElRef} // ✅ passed to Gamepad for useFrame
-        />
-        <PortfolioApp
-          joystickScrollRef={joystickScrollRef}
-          activePage={portfolioState.activePage}
-          showMenu={portfolioState.showMenu}
-          onPageChange={(page) =>
-            setPortfolioState({ activePage: page, showMenu: false })
-          }
-          scrollElRef={scrollElRef} // ✅ passed to PortfolioApp → Sidebar
-        />
-      </group>
+      <Suspense fallback={<Loader />}>
+        <group position={[1.4, 3.2, 0]} scale={6.2}>
+          <Gamepad
+            setIsInteracting={setIsInteracting}
+            onButtonPress={handleButtonPress}
+            joystickScrollRef={joystickScrollRef}
+            scrollElRef={scrollElRef}
+            isLoading={isLoading}
+          />
+          <PortfolioApp
+            joystickScrollRef={joystickScrollRef}
+            activePage={portfolioState.activePage}
+            showMenu={portfolioState.showMenu}
+            onPageChange={(page) =>
+              setPortfolioState({ activePage: page, showMenu: false })
+            }
+            scrollElRef={scrollElRef}
+          />
+        </group>
+      </Suspense>
 
       <ContactShadows
         position={[0, -3, 0]}

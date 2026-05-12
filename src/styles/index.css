@@ -1,13 +1,32 @@
 @import "tailwindcss";
+
 body {
   margin: 0;
   overflow: hidden;
   padding: 0;
   box-sizing: border-box;
-  /* background-color: #111; */
 }
+
 
 .app-container {
   width: 100vw;
   height: 100vh;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent !important;
+  outline: none !important;
+}
+
+canvas {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent text selection on the 3D overlay */
+.portfolio-container {
+  user-select: none;
+  -webkit-user-select: none;
 }

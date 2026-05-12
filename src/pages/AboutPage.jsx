@@ -1,13 +1,14 @@
 // src/pages/AboutPage.jsx
 
 import { PROFILE } from "../utils/profile";
+import SafeImage from "../components/SafeImage";
 
 
 export default function AboutPage() {
   const { personalInfo, aboutMe, experience, education, images } = PROFILE;
 
   return (
-    <div className="min-h-screen text-white bg-[#070B14]">
+    <div className="min-h-screen text-white bg-[#070B14] overflow-hidden">
       {/* HERO */}
       <div
         className="relative overflow-hidden rounded-3xl border border-cyan-500/20"
@@ -20,7 +21,7 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
 
         <div className="relative z-10 flex flex-col lg:flex-row gap-8 p-8">
-          <img
+          <SafeImage
             src={images.profile}
             alt={personalInfo.fullName}
             className="w-40 h-40 rounded-3xl object-cover border-4 border-cyan-400 shadow-[0_0_40px_rgba(34,211,238,0.4)]"

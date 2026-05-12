@@ -1,6 +1,7 @@
 // src/pages/SkillsPage.jsx
 
 import { PROFILE } from "../utils/profile";
+import SafeImage from "../components/SafeImage";
 
 export default function SkillsPage() {
   const { skills, images } = PROFILE;
@@ -47,7 +48,7 @@ export default function SkillsPage() {
             key={key}
             className="rounded-3xl border border-cyan-500/20 bg-[#0b1120] p-6 flex flex-col items-center justify-center gap-4 hover:scale-105 transition-all duration-300"
           >
-            <img src={icon} alt={key} className="w-16 h-16" />
+            <SafeImage src={icon} alt={key} className="w-16 h-16" />
 
             <p className="capitalize font-bold text-cyan-300">
               {key}

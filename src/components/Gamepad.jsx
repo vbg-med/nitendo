@@ -1,6 +1,7 @@
 import { useGLTF } from "@react-three/drei";
 import { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import gsap from "gsap";
 import { SCREEN_NAME, JOYCON_NAMES } from "../utils/constants"; // ✅ fix #1
 
 function isBlockedMesh(object) {
@@ -24,6 +25,7 @@ export default function Gamepad({
   onButtonPress,
   joystickScrollRef,
   scrollElRef,
+  isLoading,
 }) {
   const { scene } = useGLTF("/withScreen.glb");
 
@@ -65,7 +67,31 @@ export default function Gamepad({
         obj.userData.initialPosition = obj.position.clone();
       }
 
+      if (!obj.userData.initialRotation) {
+        obj.userData.initialRotation = obj.rotation.clone();
+      }
+
+      if (!obj.userData.initialEmissive) {
+        obj.userData.initialEmissive = obj.material.emissive?.clone() || { r: 0, g: 0, b: 0 };
+      }
+
+      obj.userData.onHover = (hovering) => {
+        if (hovering && !isBlockedMesh(obj)) {
+          if (obj.material.emissive) {
+            // Subtle highlight instead of bright white overlay
+            // obj.material.emissiveIntensity = 2;
+            document.body.style.cursor = "pointer";
+          }
+        } else {
+          if (obj.material.emissive) {
+            obj.material.emissive.copy(obj.userData.initialEmissive);
+            document.body.style.cursor = "auto";
+          }
+        }
+      };
+
       obj.userData.onClick = () => {
+        if (isLoading) return;
         obj.position.z -= 0.02;
         setTimeout(() => {
           if (obj.userData.initialPosition) {
@@ -90,6 +116,7 @@ export default function Gamepad({
       <primitive
         object={scene}
         onPointerDown={(e) => {
+          if (isLoading) return;
           e.stopPropagation();
           setIsInteracting(true);
 
@@ -102,11 +129,25 @@ export default function Gamepad({
           }
         }}
         onPointerUp={(e) => {
+          if (isLoading) return;
           e.stopPropagation();
           if (dragInfo.current.object) {
-            dragInfo.current.object.position.copy(
-              dragInfo.current.object.userData.initialPosition,
-            );
+            // Animate back to initial position and rotation
+            gsap.to(dragInfo.current.object.position, {
+              x: dragInfo.current.object.userData.initialPosition.x,
+              y: dragInfo.current.object.userData.initialPosition.y,
+              z: dragInfo.current.object.userData.initialPosition.z,
+              duration: 0.3,
+              ease: "power2.out",
+            });
+            gsap.to(dragInfo.current.object.rotation, {
+              x: dragInfo.current.object.userData.initialRotation.x,
+              y: dragInfo.current.object.userData.initialRotation.y,
+              z: dragInfo.current.object.userData.initialRotation.z,
+              duration: 0.3,
+              ease: "power2.out",
+            });
+
             dragInfo.current = {
               object: null,
               startPoint: null,
@@ -115,6 +156,7 @@ export default function Gamepad({
           }
         }}
         onPointerMove={(e) => {
+          if (isLoading) return;
           e.stopPropagation();
 
           const dragged = dragInfo.current.object;
@@ -126,6 +168,11 @@ export default function Gamepad({
             // movement delta
             const deltaY = e.point.y - dragInfo.current.startPoint.y;
 
+            // Apply realistic tilt (rotation)
+            // Clamp rotation to avoid over-tilting
+            const tiltAmount = Math.max(-0.4, Math.min(0.4, deltaY * 1.5));
+            dragged.rotation.x = dragged.userData.initialRotation.x + tiltAmount;
+
             // ✅ invert scroll direction
             const scrollAmount = -deltaY * 300;
 
@@ -136,7 +183,18 @@ export default function Gamepad({
             joystickScrollRef.current = currentScroll + scrollAmount;
           }
         }}
+        onPointerOver={(e) => {
+          if (isLoading) return;
+          e.stopPropagation();
+          e.object.userData.onHover?.(true);
+        }}
+        onPointerOut={(e) => {
+          if (isLoading) return;
+          e.stopPropagation();
+          e.object.userData.onHover?.(false);
+        }}
         onClick={(e) => {
+          if (isLoading) return;
           e.stopPropagation();
           if (isBlockedMesh(e.object)) {
             setIsInteracting(false);
