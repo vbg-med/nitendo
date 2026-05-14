@@ -1,10 +1,28 @@
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Environment, ContactShadows, useProgress } from "@react-three/drei";
 import { Suspense, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import Gamepad from "./Gamepad";
 import PortfolioApp from "./PortfolioApp";
 import Loader from "./Loader";
+
+function FloatingRig({ children }) {
+  const groupRef = useRef();
+  useFrame((state) => {
+    if (!groupRef.current) return;
+    const t = state.clock.elapsedTime;
+    // Ambient float (Weightless)
+    groupRef.current.position.y = Math.sin(t * 0.4) * 0.05;
+    // Subtle rotation drift
+    groupRef.current.rotation.z = Math.sin(t * 0.2) * 0.005;
+    // Inertial magnetic pull towards pointer
+    const targetRotY = state.pointer.x * 0.05;
+    const targetRotX = -state.pointer.y * 0.05;
+    groupRef.current.rotation.y += (targetRotY - groupRef.current.rotation.y) * 0.02;
+    groupRef.current.rotation.x += (targetRotX - groupRef.current.rotation.x) * 0.02;
+  });
+  return <group ref={groupRef}>{children}</group>;
+}
 
 export default function Experience() {
   const controlsRef = useRef();
@@ -59,6 +77,7 @@ export default function Experience() {
   };
 
   return (
+    <>
     <Canvas
       shadows
       dpr={window.devicePixelRatio || 2}
@@ -94,25 +113,27 @@ export default function Experience() {
       <pointLight position={[0, -5, 3]} intensity={0.2} color="#4488ff" />
       <Environment preset="city" />
 
-      <Suspense fallback={<Loader />}>
-        <group position={[1.4, 3.2, 0]} scale={6.2}>
-          <Gamepad
-            setIsInteracting={setIsInteracting}
-            onButtonPress={handleButtonPress}
-            joystickScrollRef={joystickScrollRef}
-            scrollElRef={scrollElRef}
-            isLoading={isLoading}
-          />
-          <PortfolioApp
-            joystickScrollRef={joystickScrollRef}
-            activePage={portfolioState.activePage}
-            showMenu={portfolioState.showMenu}
-            onPageChange={(page) =>
-              setPortfolioState({ activePage: page, showMenu: false })
-            }
-            scrollElRef={scrollElRef}
-          />
-        </group>
+      <Suspense fallback={null}>
+        <FloatingRig>
+          <group position={[1.4, 3.2, 1]} scale={6.2}>
+            <Gamepad
+              setIsInteracting={setIsInteracting}
+              onButtonPress={handleButtonPress}
+              joystickScrollRef={joystickScrollRef}
+              scrollElRef={scrollElRef}
+              isLoading={isLoading}
+            />
+            <PortfolioApp
+              joystickScrollRef={joystickScrollRef}
+              activePage={portfolioState.activePage}
+              showMenu={portfolioState.showMenu}
+              onPageChange={(page) =>
+                setPortfolioState({ activePage: page, showMenu: false })
+              }
+              scrollElRef={scrollElRef}
+            />
+          </group>
+        </FloatingRig>
       </Suspense>
 
       <ContactShadows
@@ -124,5 +145,7 @@ export default function Experience() {
       />
       <OrbitControls ref={controlsRef} target={[0, 0, 0]} />
     </Canvas>
+    <Loader />
+    </>
   );
 }

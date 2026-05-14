@@ -145,4 +145,16 @@
   .clip-edges {
     clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
   }
+
+  .hardware-glitch {
+    animation: hardware-shake 0.15s cubic-bezier(.36,.07,.19,.97) both;
+    filter: contrast(150%) brightness(120%) sepia(50%) hue-rotate(-50deg);
+  }
+
+  @keyframes hardware-shake {
+    10%, 90% { transform: translate3d(-1px, 1px, 0); }
+    20%, 80% { transform: translate3d(2px, -1px, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 2px, 0); }
+    40%, 60% { transform: translate3d(4px, -2px, 0); }
+  }
 }

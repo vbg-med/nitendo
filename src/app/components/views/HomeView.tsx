@@ -27,6 +27,7 @@ export function HomeView() {
           <motion.div 
             className="w-full aspect-square mb-6 border border-primary/20 relative overflow-hidden group perspective-[1000px]"
             whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 120, damping: 25, mass: 1.5 }}
           >
             <motion.div 
               className="w-full h-full relative preserve-3d transition-transform duration-500 group-hover:[transform:rotateY(180deg)]"

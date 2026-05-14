@@ -1,6 +1,6 @@
-import { useGLTF } from "@react-three/drei";
-import { useEffect, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useGLTF, useProgress } from "@react-three/drei";
+import { useEffect, useRef, useState } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { SCREEN_NAME, JOYCON_NAMES } from "../utils/constants"; // ✅ fix #1
 
@@ -20,6 +20,65 @@ function isBlockedMesh(object) {
   return false;
 }
 
+function BatteryLED() {
+  const [batteryLevel, setBatteryLevel] = useState(1);
+  const [isCharging, setIsCharging] = useState(false);
+  const matRef = useRef();
+  const { progress } = useProgress();
+
+  useEffect(() => {
+    let battery = null;
+    const updateBatteryInfo = () => {
+      if (battery) {
+        setBatteryLevel(battery.level);
+        setIsCharging(battery.charging);
+      }
+    };
+    if ('getBattery' in navigator) {
+      navigator.getBattery().then((b) => {
+        battery = b;
+        updateBatteryInfo();
+        battery.addEventListener('chargingchange', updateBatteryInfo);
+        battery.addEventListener('levelchange', updateBatteryInfo);
+      }).catch(err => console.log('Battery API not supported', err));
+    }
+  }, []);
+
+  useFrame((state) => {
+    if (!matRef.current) return;
+    
+    let color = "#00ff88"; // normal/full
+    if (isCharging) {
+      color = "#00f3ff"; // cyan charging
+    } else if (batteryLevel < 0.2) {
+      color = "#ff0000"; // red critical
+    } else if (batteryLevel < 0.5) {
+      color = "#ffaa00"; // orange medium
+    }
+
+    let intensity = 2;
+    if (progress < 100) {
+      // Booting up: fast diagnostic blink
+      color = "#ffffff";
+      intensity = (Math.sin(state.clock.elapsedTime * 30) + 1) * 3;
+    } else if (!isCharging && batteryLevel < 0.2) {
+      // Fast blink if dying
+      intensity = (Math.sin(state.clock.elapsedTime * 15) + 1) * 2;
+    }
+
+    matRef.current.color.set(color);
+    matRef.current.emissive.set(color);
+    matRef.current.emissiveIntensity = intensity;
+  });
+
+  return (
+    <mesh position={[0.2, -0.47, 0.02]}>
+      <sphereGeometry args={[0.008, 16, 16]} />
+      <meshStandardMaterial ref={matRef} toneMapped={false} />
+    </mesh>
+  );
+}
+
 export default function Gamepad({
   setIsInteracting,
   onButtonPress,
@@ -28,6 +87,7 @@ export default function Gamepad({
   isLoading,
 }) {
   const { scene } = useGLTF("/withScreen.glb");
+  const { camera } = useThree();
 
   const dragInfo = useRef({ object: null, startPoint: null, startPos: null });
   const traversedRef = useRef(false);
@@ -92,12 +152,15 @@ export default function Gamepad({
 
       obj.userData.onClick = () => {
         if (isLoading) return;
-        obj.position.z -= 0.02;
-        setTimeout(() => {
-          if (obj.userData.initialPosition) {
-            obj.position.z = obj.userData.initialPosition.z;
-          }
-        }, 120);
+        
+        // Physical, weighty button press using GSAP
+        gsap.to(obj.position, {
+          z: obj.userData.initialPosition.z - 0.02,
+          duration: 0.1,
+          ease: "power2.out",
+          yoyo: true,
+          repeat: 1
+        });
 
         const name = obj.name;
         console.log("Button clicked:", name);
@@ -137,16 +200,28 @@ export default function Gamepad({
               x: dragInfo.current.object.userData.initialPosition.x,
               y: dragInfo.current.object.userData.initialPosition.y,
               z: dragInfo.current.object.userData.initialPosition.z,
-              duration: 0.3,
-              ease: "power2.out",
+              duration: 0.8, // Slower, heavier release
+              ease: "power3.out", 
             });
             gsap.to(dragInfo.current.object.rotation, {
               x: dragInfo.current.object.userData.initialRotation.x,
               y: dragInfo.current.object.userData.initialRotation.y,
               z: dragInfo.current.object.userData.initialRotation.z,
-              duration: 0.3,
-              ease: "power2.out",
+              duration: 0.8,
+              ease: "power3.out",
             });
+
+            // Phase 4: Camera impact when heavy joycon snaps back into place
+            if (JOYCON_NAMES.includes(dragInfo.current.object.name)) {
+              gsap.to(camera.position, {
+                y: camera.position.y - 0.05,
+                duration: 0.1,
+                yoyo: true,
+                repeat: 1,
+                delay: 0.75, // triggers right as the joycon lands
+                ease: "power2.out"
+              });
+            }
 
             dragInfo.current = {
               object: null,
@@ -181,6 +256,15 @@ export default function Gamepad({
 
             // apply incremental scroll
             joystickScrollRef.current = currentScroll + scrollAmount;
+
+            // Phase 4: Signal Glitch when straining the hardware
+            if (Math.abs(scrollAmount) > 8 && scrollElRef.current) {
+              scrollElRef.current.classList.add("hardware-glitch");
+              clearTimeout(scrollElRef.current.glitchTimeout);
+              scrollElRef.current.glitchTimeout = setTimeout(() => {
+                scrollElRef.current?.classList.remove("hardware-glitch");
+              }, 150);
+            }
           }
         }}
         onPointerOver={(e) => {
@@ -204,6 +288,7 @@ export default function Gamepad({
           setTimeout(() => setIsInteracting(false), 150);
         }}
       />
+      <BatteryLED />
     </group>
   );
 }
