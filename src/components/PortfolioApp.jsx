@@ -1,18 +1,9 @@
 import { useRef, useEffect, useState } from "react";
 import { Html } from "@react-three/drei";
 import { useGLTF } from "@react-three/drei";
-import PageContent from "./PageContent";
-import AboutPage from "../pages/AboutPage";
-import SkillsPage from "../pages/SkillsPage";
-import ProjectsPage from "../pages/ProjectsPage";
-import ContactPage from "../pages/ContactPage";
-
-const pages = {
-  about: <AboutPage />,
-  skills: <SkillsPage />,
-  projects: <ProjectsPage />,
-  contact: <ContactPage />,
-};
+import { RouterProvider } from "react-router";
+import { router } from "../app/routes";
+import "../styles/futuristic/index.css";
 
 export default function PortfolioApp({
   joystickScrollRef,
@@ -28,8 +19,28 @@ export default function PortfolioApp({
 
   useEffect(() => {
     const timer = setTimeout(() => setShowScrollHint(false), 10000);
-    return () => clearTimeout(timer);
+    
+    // Connect scrollElRef to the OsLayout scrollable container
+    const interval = setInterval(() => {
+      const el = document.getElementById("os-main-content");
+      if (el && scrollElRef) {
+        scrollElRef.current = el;
+      }
+    }, 500);
+    
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
   }, []);
+
+  // Sync activePage prop with router navigation
+  useEffect(() => {
+    if (activePage === "about") router.navigate("/");
+    else if (activePage === "skills") router.navigate("/skills");
+    else if (activePage === "projects") router.navigate("/projects");
+    else if (activePage === "contact") router.navigate("/contact");
+  }, [activePage]);
 
   useEffect(() => {
     // Find the screen mesh and get its world position/rotation
@@ -66,11 +77,8 @@ export default function PortfolioApp({
       }}
       zIndexRange={[1, 10]}
     >
-      <div className="flex  h-full bg-[#141414]/95 text-white font-sans rounded-lg overflow-hidden relative">
-        <PageContent 
-          page={pages[activePage]} 
-          scrollElRef={scrollElRef} 
-        />
+      <div className="flex h-full bg-[#141414]/95 text-white font-sans rounded-lg overflow-hidden relative" ref={scrollElRef}>
+        <RouterProvider router={router} />
         
         <div className={`absolute right-5 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2.5 pointer-events-none opacity-50 transition-opacity duration-300 z-[100] ${!showScrollHint ? "opacity-0" : ""}`}>
           <div className="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[12px] border-b-[#00ff88]"></div>
