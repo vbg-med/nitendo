@@ -131,6 +131,7 @@ export default function Experience() {
                 setPortfolioState({ activePage: page, showMenu: false })
               }
               scrollElRef={scrollElRef}
+              setIsInteracting={setIsInteracting}
             />
           </group>
         </FloatingRig>

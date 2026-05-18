@@ -11,6 +11,7 @@ export default function PortfolioApp({
   showMenu,
   onPageChange,
   scrollElRef,
+  setIsInteracting,
 }) {
   const { scene } = useGLTF("/withScreen.glb");
   const [screenPos, setScreenPos] = useState(null);
@@ -77,7 +78,16 @@ export default function PortfolioApp({
       }}
       zIndexRange={[1, 10]}
     >
-      <div className="flex h-full bg-[#141414]/95 text-white font-sans rounded-lg overflow-hidden relative" ref={scrollElRef}>
+      <div 
+        className="flex h-full bg-[#141414]/95 text-white font-sans rounded-lg overflow-hidden relative" 
+        ref={scrollElRef}
+        onMouseEnter={() => setIsInteracting?.(true)}
+        onMouseLeave={() => setIsInteracting?.(false)}
+        onWheel={(e) => {
+          // Stop scroll event from reaching canvas (prevents annoying 3D camera zooming)
+          e.stopPropagation();
+        }}
+      >
         <RouterProvider router={router} />
         
         <div className={`absolute right-5 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2.5 pointer-events-none opacity-50 transition-opacity duration-300 z-[100] ${!showScrollHint ? "opacity-0" : ""}`}>

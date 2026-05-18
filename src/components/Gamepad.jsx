@@ -98,20 +98,25 @@ export default function Gamepad({
     onButtonPressRef.current = onButtonPress;
   }, [onButtonPress]);
 
-  // ✅ fix #2 — useFrame lives here in R3F context, writes to DOM ref
+  // Only write to DOM scrollTop when actively dragging the Joycon, otherwise keep the ref in sync with native scroll.
   useFrame(() => {
     if (scrollElRef?.current) {
       const el = scrollElRef.current;
 
       if (el) {
-        const maxScroll = el.scrollHeight - el.clientHeight;
+        if (dragInfo.current.object) {
+          const maxScroll = el.scrollHeight - el.clientHeight;
 
-        joystickScrollRef.current = Math.max(
-          0,
-          Math.min(maxScroll, joystickScrollRef.current),
-        );
+          joystickScrollRef.current = Math.max(
+            0,
+            Math.min(maxScroll, joystickScrollRef.current),
+          );
 
-        el.scrollTop = joystickScrollRef.current;
+          el.scrollTop = joystickScrollRef.current;
+        } else {
+          // Keep the joystick scroll reference synchronized with native scrollwheel / page nav scrolls
+          joystickScrollRef.current = el.scrollTop;
+        }
       }
     }
   });
