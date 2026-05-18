@@ -282,91 +282,91 @@ export function OsLayout() {
             </motion.div>
           </AnimatePresence>
         </main>
-
-        {/* Neural Diagnostic Terminal Drawer */}
-        <AnimatePresence>
-          {terminalOpen && (
-            <motion.div 
-              initial={{ opacity: 0, y: -40, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -40, scale: 0.98 }}
-              transition={{ type: "spring", stiffness: 220, damping: 25 }}
-              className="absolute inset-x-6 top-14 bottom-6 bg-black/95 border border-cyan-500/50 rounded shadow-[0_0_30px_rgba(0,243,255,0.25)] backdrop-blur-xl flex flex-col overflow-hidden z-[200] font-mono"
-            >
-              {/* Terminal Title Bar */}
-              <div className="h-10 border-b border-cyan-500/30 px-4 flex items-center justify-between bg-cyan-950/20 select-none">
-                <div className="flex items-center gap-2 text-xs text-cyan-400">
-                  <Terminal size={14} className="animate-pulse" />
-                  <span className="font-['Orbitron'] tracking-wider text-[10px]">SYS_DIAGNOSTICS@NETRUNNER:~</span>
-                </div>
-                <button 
-                  onClick={() => setTerminalOpen(false)}
-                  className="text-[9px] text-cyan-500 hover:text-cyan-300 font-mono uppercase border border-cyan-500/20 hover:border-cyan-400/50 px-2 py-0.5 rounded bg-cyan-950/40 cursor-pointer active:scale-95 transition-all"
-                >
-                  [CLOSE_OS // ESC]
-                </button>
-              </div>
-
-              {/* Terminal Logs View */}
-              <div className="flex-1 p-4 text-[11px] text-cyan-200 overflow-y-auto custom-scrollbar flex flex-col gap-1.5 select-text relative">
-                {terminalLogs.map((log, index) => (
-                  <div key={index} className="whitespace-pre-wrap leading-relaxed">
-                    {log}
-                  </div>
-                ))}
-                <div ref={terminalBottomRef} />
-                
-                {/* Overlaid intrusion screensaver */}
-                {isHacking && (
-                  <div className="absolute inset-0 bg-[#020202] z-50 flex flex-col items-center justify-center font-mono text-emerald-400 p-8 select-none">
-                    <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.3)_50%)] bg-[size:100%_4px] pointer-events-none opacity-40"></div>
-                    <div className="w-16 h-16 mb-6 relative flex items-center justify-center">
-                      <div className="absolute inset-0 rounded-full border-2 border-emerald-500/20 animate-ping"></div>
-                      <svg className="w-12 h-12 text-emerald-500 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <circle cx="12" cy="12" r="10" strokeDasharray="30 10 10 10"/>
-                      </svg>
-                    </div>
-                    <h3 className="font-['Orbitron'] text-sm md:text-base tracking-widest text-emerald-300 mb-2 animate-pulse uppercase">
-                      DECRYPTING SECTOR_77
-                    </h3>
-                    <div className="text-[9px] uppercase tracking-wider text-emerald-600 mb-4 animate-[pulse_1s_infinite]">
-                      INTRUSION PAYLOAD INJECTED // FIREWALL BYPASS_OK
-                    </div>
-                    <div className="w-48 h-1.5 bg-emerald-950/50 border border-emerald-500/30 rounded-full overflow-hidden">
-                      <motion.div 
-                        className="h-full bg-emerald-400"
-                        initial={{ width: "0%" }}
-                        animate={{ width: "100%" }}
-                        transition={{ duration: 3.2, ease: "linear" }}
-                      />
-                    </div>
-                    <div className="text-[8px] text-emerald-500/50 max-w-sm mt-8 text-center flex flex-col gap-1 select-none">
-                      <div>[SYS_INIT: PAYLOAD DEPLOYED 0x8F91B]</div>
-                      <div>[BYPASSING MATRIX CORES... SUCCESS]</div>
-                      <div>[EXTRACTING HIGH-VALUE METADATA...]</div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Terminal Form Footer */}
-              <form onSubmit={handleCommand} className="h-10 border-t border-cyan-500/30 px-4 flex items-center bg-cyan-950/10">
-                <span className="text-cyan-400 font-mono text-[11px] mr-2 shrink-0 select-none">
-                  guest@netrunner:~#
-                </span>
-                <input 
-                  ref={inputRef}
-                  type="text"
-                  value={inputVal}
-                  onChange={(e) => setInputVal(e.target.value)}
-                  placeholder="type /help to view available protocols..."
-                  className="flex-1 bg-transparent text-cyan-100 font-mono text-[11px] outline-none border-none placeholder-cyan-700/60"
-                />
-              </form>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
+
+      {/* Neural Diagnostic Terminal Drawer */}
+      <AnimatePresence>
+        {terminalOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -40, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -40, scale: 0.98 }}
+            transition={{ type: "spring", stiffness: 220, damping: 25 }}
+            className="absolute inset-x-6 top-14 bottom-6 bg-black/95 border border-cyan-500/50 rounded shadow-[0_0_30px_rgba(0,243,255,0.25)] backdrop-blur-xl flex flex-col overflow-hidden z-[200] font-mono"
+          >
+            {/* Terminal Title Bar */}
+            <div className="h-10 border-b border-cyan-500/30 px-4 flex items-center justify-between bg-cyan-950/20 select-none">
+              <div className="flex items-center gap-2 text-xs text-cyan-400">
+                <Terminal size={14} className="animate-pulse" />
+                <span className="font-['Orbitron'] tracking-wider text-[10px]">SYS_DIAGNOSTICS@NETRUNNER:~</span>
+              </div>
+              <button 
+                onClick={() => setTerminalOpen(false)}
+                className="text-[9px] text-cyan-500 hover:text-cyan-300 font-mono uppercase border border-cyan-500/20 hover:border-cyan-400/50 px-2 py-0.5 rounded bg-cyan-950/40 cursor-pointer active:scale-95 transition-all"
+              >
+                [CLOSE_OS // ESC]
+              </button>
+            </div>
+
+            {/* Terminal Logs View */}
+            <div className="flex-1 p-4 text-[11px] text-cyan-200 overflow-y-auto custom-scrollbar flex flex-col gap-1.5 select-text relative">
+              {terminalLogs.map((log, index) => (
+                <div key={index} className="whitespace-pre-wrap leading-relaxed">
+                  {log}
+                </div>
+              ))}
+              <div ref={terminalBottomRef} />
+              
+              {/* Overlaid intrusion screensaver */}
+              {isHacking && (
+                <div className="absolute inset-0 bg-[#020202] z-50 flex flex-col items-center justify-center font-mono text-emerald-400 p-8 select-none">
+                  <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.3)_50%)] bg-[size:100%_4px] pointer-events-none opacity-40"></div>
+                  <div className="w-16 h-16 mb-6 relative flex items-center justify-center">
+                    <div className="absolute inset-0 rounded-full border-2 border-emerald-500/20 animate-ping"></div>
+                    <svg className="w-12 h-12 text-emerald-500 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="10" strokeDasharray="30 10 10 10"/>
+                    </svg>
+                  </div>
+                  <h3 className="font-['Orbitron'] text-sm md:text-base tracking-widest text-emerald-300 mb-2 animate-pulse uppercase">
+                    DECRYPTING SECTOR_77
+                  </h3>
+                  <div className="text-[9px] uppercase tracking-wider text-emerald-600 mb-4 animate-[pulse_1s_infinite]">
+                    INTRUSION PAYLOAD INJECTED // FIREWALL BYPASS_OK
+                  </div>
+                  <div className="w-48 h-1.5 bg-emerald-950/50 border border-emerald-500/30 rounded-full overflow-hidden">
+                    <motion.div 
+                      className="h-full bg-emerald-400"
+                      initial={{ width: "0%" }}
+                      animate={{ width: "100%" }}
+                      transition={{ duration: 3.2, ease: "linear" }}
+                    />
+                  </div>
+                  <div className="text-[8px] text-emerald-500/50 max-w-sm mt-8 text-center flex flex-col gap-1 select-none">
+                    <div>[SYS_INIT: PAYLOAD DEPLOYED 0x8F91B]</div>
+                    <div>[BYPASSING MATRIX CORES... SUCCESS]</div>
+                    <div>[EXTRACTING HIGH-VALUE METADATA...]</div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Terminal Form Footer */}
+            <form onSubmit={handleCommand} className="h-10 border-t border-cyan-500/30 px-4 flex items-center bg-cyan-950/10">
+              <span className="text-cyan-400 font-mono text-[11px] mr-2 shrink-0 select-none">
+                guest@netrunner:~#
+              </span>
+              <input 
+                ref={inputRef}
+                type="text"
+                value={inputVal}
+                onChange={(e) => setInputVal(e.target.value)}
+                placeholder="type /help to view available protocols..."
+                className="flex-1 bg-transparent text-cyan-100 font-mono text-[11px] outline-none border-none placeholder-cyan-700/60"
+              />
+            </form>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* UI Framing Corners */}
       <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-cyan-500 z-20 pointer-events-none"/>

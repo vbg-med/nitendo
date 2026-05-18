@@ -7,7 +7,6 @@
     "checkJs": false,
     "allowJs": true,
     "strict": false,
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
