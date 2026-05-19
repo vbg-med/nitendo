@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { GlitchText, HoloCard, ProgressBar, StatBox } from "../ui/CyberUI";
 import { Terminal, Shield, Zap, Target, Activity } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { ExperienceView } from "./ExperienceView";
 export function HomeView() {
   const [isFlipped, setIsFlipped] = useState(false);
 
@@ -139,7 +140,7 @@ export function HomeView() {
     </div>
 
     {/* Bottom Row - Full Width Recent Activity Stream */}
-    <div className="w-full shrink-0">
+    {/* <div className="w-full shrink-0">
       <HoloCard>
         <h3 className="font-['Orbitron'] text-primary mb-4 flex items-center gap-2">
           <Activity size={16} /> RECENT ACTIVITY STREAM
@@ -154,6 +155,7 @@ export function HomeView() {
           ))}
         </div>
       </HoloCard>
-    </div>
+    </div> */}
+    <ExperienceView/>
   </div>);
 }

@@ -111,7 +111,7 @@ export function ProjectsView() {
                 </div>
               </div>
               
-              <div className="flex gap-4 mt-auto pt-4 border-t border-primary/20">
+              <div className="flex flex-col gap-4 mt-auto pt-4 border-t border-primary/20">
                 <NeonButton className="flex-1 flex items-center justify-center gap-2">
                   <ExternalLink size={16}/> INITIALIZE
                 </NeonButton>
