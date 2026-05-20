@@ -13,6 +13,8 @@ const MISSIONS = [
         desc: "A highly classified e-commerce platform built for a mega-corporation. Features real-time inventory tracking and AI-driven recommendations.",
         tech: ["Next.js", "TypeScript", "Tailwind", "Stripe"],
         image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop",
+        liveUrl: "https://example.com/project-nebula",
+        sourceUrl: "https://github.com/example/project-nebula",
         color: "primary"
     },
     {
@@ -24,6 +26,8 @@ const MISSIONS = [
         desc: "A web-based operating system interface for remote server management. Fully responsive with window management and terminal access.",
         tech: ["React", "Zustand", "Framer Motion", "WebSockets"],
         image: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=1000&auto=format&fit=crop",
+        liveUrl: "https://example.com/synth-wave-os",
+        sourceUrl: "https://github.com/example/synth-wave-os",
         color: "secondary"
     },
     {
@@ -35,6 +39,8 @@ const MISSIONS = [
         desc: "A data visualization dashboard scraping public records to identify anomalies in market trends. High performance canvas rendering.",
         tech: ["Vue.js", "D3.js", "Node.js", "MongoDB"],
         image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop",
+        liveUrl: "https://example.com/data-heist",
+        sourceUrl: "https://github.com/example/data-heist",
         color: "accent"
     }
 ];
@@ -64,7 +70,7 @@ export function ProjectsView() {
 
       <div className="flex-1 relative flex items-center justify-center min-h-0">
         <AnimatePresence mode="wait">
-          <motion.div key={current.id} initial={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }} animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }} exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }} transition={{ duration: 0.4 }} className="w-full max-w-4xl h-full flex flex-col md:flex-row glass-panel border border-primary/30 overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.8)] relative group">
+          <motion.div key={current.id} initial={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }} animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }} exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }} transition={{ duration: 0.4 }} className="w-full max-w-4xl min-h-105 flex flex-col md:flex-row glass-panel border border-primary/30 overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.8)] relative group">
             {/* Holographic scanning overlay */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
               <motion.div className="w-full h-8 bg-linear-to-b from-transparent via-primary/10 to-transparent" animate={{ top: ["-10%", "110%"] }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }} style={{ position: "absolute" }}/>
@@ -73,13 +79,28 @@ export function ProjectsView() {
             {/* Left Image Section */}
             <div className="w-full md:w-1/2 relative min-h-50 md:min-h-full border-r border-primary/20">
               <ImageWithFallback src={current.image} alt={current.title} className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-luminosity filter contrast-125 group-hover:opacity-80 transition-opacity"/>
-              <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent"></div>
+              {/* <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent"></div> */}
+              
+              <div className="absolute top-4 right-4  flex items-center justify-center z-1000 ">
+                <div className="opacity-0  group-hover:opacity-100  transition-opacity duration-300 flex flex-row md:flex-col items-center gap-1    rounded-xl backdrop-blur-xl">
+                  <a href={current.liveUrl} target="_blank" rel="noreferrer" className="w-full md:w-auto">
+                    <NeonButton className="flex-1  flex items-center justify-center gap-1">
+                      <ExternalLink size={14}/> 
+                    </NeonButton>
+                  </a>
+                  <a href={current.sourceUrl} target="_blank" rel="noreferrer" className="w-full md:w-auto">
+                    <NeonButton variant="secondary" className="flex items-center justify-center gap-1 ">
+                      <Github size={14}/> 
+                    </NeonButton>
+                  </a>
+                </div>
+              </div>
               
               <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
-                <span className="bg-black/80 border border-primary text-primary px-2 py-1 text-[10px] font-mono flex items-center gap-2">
+                <span className="bg-black/80 border border-primary text-primary px-3 py-1 text-sm font-mono flex items-center gap-2">
                   <ShieldCheck size={12}/> {current.status}
                 </span>
-                <span className={`bg-black/80 border px-2 py-1 text-[10px] font-mono flex items-center gap-2 w-fit ${diffColors[current.difficulty]}`}>
+                <span className={`bg-black/80 border px-3 py-1 text-sm font-mono flex items-center gap-2 w-fit ${diffColors[current.difficulty]}`}>
                   <AlertTriangle size={12}/> THREAT: {current.difficulty}
                 </span>
               </div>
