@@ -94,12 +94,12 @@ export function ExperienceView() {
         </motion.div>))}
 
         {/* Origin Node */}
-        <div className="relative flex flex-col md:flex-row gap-6 md:gap-8 opacity-50">
+        <div className="relative flex flex-col md:flex-row gap-6 md:gap-8 ">
           <div className="absolute left-4 md:left-[15.5%] w-4 h-4 rounded-full bg-black border-2 border-white/30 transform -translate-x-1.75 md:-translate-x-1.75 "></div>
           <div className="ml-12 md:ml-0 md:w-[12%] md:text-right pt-0 shrink-0">
             <div className="text-white/50 font-mono text-sm">ORIGIN</div>
           </div>
-          <div className="ml-12 md:ml-0 md:flex-1 text-xs font-mono text-muted-foreground">
+          <div className="ml-12 md:ml-0 md:flex-1 text-xs hover:text-primary hover:font-bold font-mono text-muted-foreground">
             SYSTEM INITIALIZED. FIRST HELLO WORLD EXECUTED.
           </div>
         </div>

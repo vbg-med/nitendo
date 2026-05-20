@@ -40,11 +40,11 @@ export function HomeView() {
                 ID:3008-X8
               </span>
               <GlitchText text="JANE DOE" as="h2" className="text-2xl text-white font-bold" />
-              <span className="text-xs text-muted-foreground font-mono">SYS_ADMIN // Lvl 42</span>
+              <span className="text-xs text-muted-foreground font-mono">SYS_ADMIN // Lvl 24</span>
             </div>
             <div className="w-12 h-12 shrink-0 border-2 border-primary rounded-full flex items-center justify-center relative shadow-[0_0_15px_rgba(0,243,255,0.5)]">
-              <span className="font-['Orbitron'] text-lg font-bold text-primary">42</span>
-              <svg className="absolute inset-[-4px] w-[52px] h-[52px] animate-[spin_4s_linear_infinite]" viewBox="0 0 100 100">
+              <span className="font-['Orbitron'] text-lg font-bold text-primary">24</span>
+              <svg className="absolute -inset-1 w-13 h-13 animate-[spin_4s_linear_infinite]" viewBox="0 0 100 100">
                 <circle cx="50" cy="50" r="48" fill="none" stroke="var(--primary)" strokeWidth="2" strokeDasharray="40 20 10 20" opacity="0.6" />
               </svg>
             </div>
@@ -105,7 +105,7 @@ export function HomeView() {
           <div className="mt-auto">
             <div className="flex gap-2 justify-between text-xs font-mono mb-1">
               <span className="text-primary flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span> ONLINE</span>
-              <span className="text-muted-foreground">NEO-PUNE 37</span>
+              <span className="text-muted-foreground">NOIR-PUNE</span>
             </div>
             <ProgressBar label="XP TO NEXT LEVEL" percentage={78} color="primary" />
           </div>

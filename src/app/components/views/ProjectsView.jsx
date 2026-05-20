@@ -57,8 +57,8 @@ export function ProjectsView() {
           <p className="text-xs font-mono text-muted-foreground mt-1">SELECT TARGET DOSSIER</p>
         </div>
         <div className="flex gap-2">
-          <NeonButton onClick={prevMission} className="!px-3"><ChevronLeft size={16}/></NeonButton>
-          <NeonButton onClick={nextMission} className="!px-3"><ChevronRight size={16}/></NeonButton>
+          <NeonButton onClick={prevMission} className="px-3!"><ChevronLeft size={16}/></NeonButton>
+          <NeonButton onClick={nextMission} className="px-3!"><ChevronRight size={16}/></NeonButton>
         </div>
       </div>
 
@@ -67,13 +67,13 @@ export function ProjectsView() {
           <motion.div key={current.id} initial={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }} animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }} exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }} transition={{ duration: 0.4 }} className="w-full max-w-4xl h-full flex flex-col md:flex-row glass-panel border border-primary/30 overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.8)] relative group">
             {/* Holographic scanning overlay */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
-              <motion.div className="w-full h-8 bg-gradient-to-b from-transparent via-primary/10 to-transparent" animate={{ top: ["-10%", "110%"] }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }} style={{ position: "absolute" }}/>
+              <motion.div className="w-full h-8 bg-linear-to-b from-transparent via-primary/10 to-transparent" animate={{ top: ["-10%", "110%"] }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }} style={{ position: "absolute" }}/>
             </div>
 
             {/* Left Image Section */}
-            <div className="w-full md:w-1/2 relative min-h-[200px] md:min-h-full border-r border-primary/20">
+            <div className="w-full md:w-1/2 relative min-h-50 md:min-h-full border-r border-primary/20">
               <ImageWithFallback src={current.image} alt={current.title} className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-luminosity filter contrast-125 group-hover:opacity-80 transition-opacity"/>
-              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+              <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent"></div>
               
               <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
                 <span className="bg-black/80 border border-primary text-primary px-2 py-1 text-[10px] font-mono flex items-center gap-2">
@@ -96,7 +96,7 @@ export function ProjectsView() {
                 {current.title}
               </h2>
               
-              <div className="h-px w-full bg-gradient-to-r from-primary to-transparent mb-6"></div>
+              <div className="h-px w-full bg-linear-to-r from-primary to-transparent mb-6"></div>
               
               <p className="text-sm font-mono text-gray-300 leading-relaxed mb-6 flex-1">
                 {current.desc}
@@ -111,14 +111,7 @@ export function ProjectsView() {
                 </div>
               </div>
               
-              <div className="flex flex-col gap-4 mt-auto pt-4 border-t border-primary/20">
-                <NeonButton className="flex-1 flex items-center justify-center gap-2">
-                  <ExternalLink size={16}/> INITIALIZE
-                </NeonButton>
-                <NeonButton variant="secondary" className="flex items-center justify-center gap-2 !px-4">
-                  <Github size={16}/> SOURCE
-                </NeonButton>
-              </div>
+           
             </div>
           </motion.div>
         </AnimatePresence>
