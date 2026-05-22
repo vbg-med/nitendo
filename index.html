@@ -2,12 +2,97 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>nitendo</title>
+
+    <!-- SEO Meta Tags -->
+    <title>Nitendo - Interactive 3D Portfolio</title>
+    <meta
+      name="description"
+      content="Explore an immersive 3D interactive portfolio experience inspired by the Nintendo Switch. Navigate through projects, skills, and contact using an innovative 3D gamepad interface."
+    />
+    <meta
+      name="keywords"
+      content="portfolio, 3D, interactive, developer, React, Three.js, WebGL, creative"
+    />
+    <meta name="author" content="Your Name" />
+    <meta name="theme-color" content="#050508" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://yourportfolio.com" />
+
+    <!-- Open Graph (Social Media) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Nitendo - Interactive 3D Portfolio" />
+    <meta
+      property="og:description"
+      content="Explore an immersive 3D interactive portfolio experience inspired by the Nintendo Switch."
+    />
+    <meta property="og:url" content="https://yourportfolio.com" />
+    <meta
+      property="og:image"
+      content="https://yourportfolio.com/og-image.jpg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Nitendo Portfolio" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Nitendo - Interactive 3D Portfolio" />
+    <meta
+      name="twitter:description"
+      content="Explore an immersive 3D interactive portfolio experience inspired by the Nintendo Switch."
+    />
+    <meta
+      name="twitter:image"
+      content="https://yourportfolio.com/og-image.jpg"
+    />
+    <meta name="twitter:creator" content="@yourhandle" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Your Name",
+        "jobTitle": "Full Stack Developer",
+        "url": "https://yourportfolio.com",
+        "sameAs": [
+          "https://github.com/yourusername",
+          "https://linkedin.com/in/yourprofile",
+          "https://twitter.com/yourhandle"
+        ],
+        "image": "https://yourportfolio.com/profile.jpg",
+        "description": "Interactive 3D portfolio built with React and Three.js"
+      }
+    </script>
+
+    <!-- Preload Critical Resources -->
+    <link rel="preload" as="image" href="/withnames.glb" />
+    <link rel="preload" as="image" href="/controlswitch.glb" />
+    <link
+      rel="preload"
+      as="font"
+      href="/fonts/orbitron.woff2"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Analytics (optional - replace with your tracking ID) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=GA_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'GA_ID');
+    </script> -->
   </body>
 </html>

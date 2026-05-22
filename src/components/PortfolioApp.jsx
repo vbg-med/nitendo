@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { Html } from "@react-three/drei";
 import { useGLTF } from "@react-three/drei";
 import { RouterProvider } from "react-router";
@@ -6,10 +6,7 @@ import { router } from "../app/routes";
 import "../styles/futuristic/index.css";
 
 export default function PortfolioApp({
-  joystickScrollRef,
   activePage,
-  showMenu,
-  onPageChange,
   scrollElRef,
   setIsInteracting,
 }) {
@@ -63,6 +60,8 @@ export default function PortfolioApp({
   return (
     <Html
       transform
+            aria-label="Portfolio Content"
+
       occlude="raycast"
       position={position}
       rotation={rotation}

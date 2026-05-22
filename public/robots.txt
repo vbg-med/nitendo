@@ -1,0 +1,14 @@
+# Allow all search engines to crawl and index
+User-agent: *
+Allow: /
+Disallow: /dist/
+
+# Specific rules for Google
+User-agent: Googlebot
+Allow: /
+
+# Sitemap location
+Sitemap: https://yourportfolio.com/sitemap.xml
+
+# Crawl delay (optional - prevents server overload)
+Crawl-delay: 1

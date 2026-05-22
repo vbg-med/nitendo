@@ -56,7 +56,7 @@ export function ExperienceView() {
       <div className="space-y-12 pb-12 pt-4 relative">
         {TIMELINE.map((item, idx) => (<motion.div key={idx} initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.2, type: "spring" }} className="relative flex flex-col md:flex-row gap-6 md:gap-8 group">
           {/* Timeline Node */}
-          <div className="absolute left-4 md:left-[15.5%] w-4 h-4 rounded-full bg-black border-2 border-primary transform -translate-x-1.75 md:-translate-x-1.75 mt-1.5 md:mt-0 z-10 group-hover:scale-110 transition-transform group-hover:bg-primary group-hover:shadow-[0_0_10px_#00f3ff] "></div>
+          <div className="absolute left-4 md:left-[15.6%] w-4 h-4 rounded-full bg-black border-2 border-primary transform -translate-x-1.75 md:-translate-x-1.75 mt-1.5 md:mt-0 z-10 group-hover:scale-110 transition-transform group-hover:bg-primary group-hover:shadow-[0_0_10px_#00f3ff] "></div>
 
           {/* Left Side - Year & Level */}
           <div className="ml-16 md:ml-0 md:w-[14.5%] md:text-right  pt-0 pr-1 shrink-0">
@@ -95,7 +95,7 @@ export function ExperienceView() {
 
         {/* Origin Node */}
         <div className="relative flex flex-col md:flex-row gap-6 md:gap-8 ">
-          <div className="absolute left-4 md:left-[15.5%] w-4 h-4 rounded-full bg-black border-2 border-white/30 transform -translate-x-1.75 md:-translate-x-1.75 "></div>
+          <div className="absolute left-4 md:left-[15.6%] w-4 h-4 rounded-full bg-black border-2 border-white/30 transform -translate-x-1.75 md:-translate-x-1.75 "></div>
           <div className="ml-12 md:ml-0 md:w-[12%] md:text-right pt-0 shrink-0">
             <div className="text-white/50 font-mono text-sm">ORIGIN</div>
           </div>

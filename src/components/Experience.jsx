@@ -5,6 +5,10 @@ import gsap from "gsap";
 import Gamepad from "./Gamepad";
 import PortfolioApp from "./PortfolioApp";
 import Loader from "./Loader";
+import { useKeyboardNavigation } from "../hooks/useKeyboardNavigation";
+import KeyboardShortcutsModal from "./KeyboardShortcutsModal";
+import { HiOutlineLightBulb } from "react-icons/hi";
+
 
 function FloatingRig({ children }) {
   const groupRef = useRef();
@@ -29,11 +33,53 @@ export default function Experience() {
   const cameraRef = useRef();
   const joystickScrollRef = useRef(0);
   const scrollElRef = useRef(null); // ✅ DOM ref for sidebar scroll container
+    const [isOpen, setIsOpen] = useState(false);
 
   const [portfolioState, setPortfolioState] = useState({
     activePage: "about",
     showMenu: false,
   });
+
+   useKeyboardNavigation(
+    (page) => {
+      // Handle page switching
+      setPortfolioState((prev) => ({
+        ...prev,
+        activePage: page,
+      }));
+    },
+    (direction) => {
+      // Handle camera movement
+      if (controlsRef.current && cameraRef.current) {
+        const speed = 0.1;
+        if (direction.forward) cameraRef.current.position.z -= speed;
+        if (direction.backward) cameraRef.current.position.z += speed;
+        if (direction.left) cameraRef.current.position.x -= speed;
+        if (direction.right) cameraRef.current.position.x += speed;
+      }
+    },
+  );
+
+   useEffect(() => {
+    window.toggleMenu = () => {
+      setPortfolioState((prev) => ({
+        ...prev,
+        showMenu: !prev.showMenu,
+      }));
+    };
+
+    window.closeModals = () => {
+      setPortfolioState((prev) => ({
+        ...prev,
+        showMenu: false,
+      }));
+    };
+
+    return () => {
+      delete window.toggleMenu;
+      delete window.closeModals;
+    };
+  }, []);
 
   const { progress } = useProgress();
   const isLoading = progress < 100;
@@ -76,7 +122,7 @@ export default function Experience() {
     }
   };
 
-  return (
+  return ( 
     <>
     <Canvas
       shadows
@@ -146,7 +192,23 @@ export default function Experience() {
       />
       <OrbitControls ref={controlsRef} target={[0, 0, 0]} />
     </Canvas>
+        {/* UI Overlay - Top Right */}
+      <div className="fixed top-4 right-4 z-40 flex gap-2">
+     <HiOutlineLightBulb
+  className="
+    text-yellow-300
+    drop-shadow-[0_0_6px_rgba(253,224,71,0.9)]
+  "
+/> For help press shift + ? or click <button className="text-cyan-400 cursor-pointer underline" onClick={(
+        ) => setIsOpen(true)}>
+          here
+        </button>
+      </div>
+
+      {/* Keyboard Shortcuts Modal */}
+      <KeyboardShortcutsModal isOpen={isOpen} setIsOpen={setIsOpen} />
     <Loader />
     </>
   );
 }
+ 
