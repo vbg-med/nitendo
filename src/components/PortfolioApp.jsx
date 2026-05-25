@@ -89,10 +89,10 @@ export default function PortfolioApp({
       >
         <RouterProvider router={router} />
         
-        <div className={`absolute right-5 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2.5 pointer-events-none opacity-50 transition-opacity duration-300 z-[100] ${!showScrollHint ? "opacity-0" : ""}`}>
-          <div className="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[12px] border-b-[#00ff88]"></div>
+        <div className={`absolute right-5 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2.5 pointer-events-none opacity-50 transition-opacity duration-300 z-100 ${!showScrollHint ? "opacity-0" : ""}`}>
+          <div className="w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-b-12 border-b-[#00ff88]"></div>
           <div className="w-0.5 h-10 bg-[#00ff88]/30"></div>
-          <div className="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[12px] border-t-[#00ff88]"></div>
+          <div className="w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-t-12 border-t-[#00ff88]"></div>
           <div className="text-[1rem] color-[#00ff88] [writing-mode:vertical-rl] uppercase tracking-[2px]">Joycon Scroll</div>
         </div>
       </div>

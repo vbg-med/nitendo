@@ -80,7 +80,7 @@ export default function Loader() {
   if (bootPhase === "done") return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] pointer-events-none">
+    <div className="fixed inset-0 z-9999 pointer-events-none">
       <AnimatePresence>
         {bootPhase === "bios" && (
           <motion.div
@@ -89,7 +89,7 @@ export default function Loader() {
             transition={{ duration: 0.1 }}
           >
             {/* Scanlines / CRT Overlay */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-50 bg-[length:100%_4px,3px_100%] opacity-50" />
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-50 bg-size-[100%_4px,3px_100%] opacity-50" />
 
             <div className="relative z-10 flex flex-col gap-1 drop-shadow-[0_0_5px_rgba(0,255,136,0.8)]">
               {lines.map((line, i) => (
