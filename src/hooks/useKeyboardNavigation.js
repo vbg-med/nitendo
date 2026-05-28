@@ -7,6 +7,10 @@ import { useEffect, useCallback } from "react";
 export function useKeyboardNavigation(onPageChange, onCameraMove) {
   const handleKeyDown = useCallback(
     (event) => {
+    const tag = document.activeElement?.tagName?.toLowerCase();
+    if (tag === "input" || tag === "textarea" || document.activeElement?.isContentEditable) {
+      return;
+    }
       const { key, code } = event;
 
       // Page navigation with number keys (1-4)
